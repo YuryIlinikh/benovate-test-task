@@ -1,0 +1,57 @@
+[
+{
+ "model": "transfers.inn",
+ "pk": 1,
+ "fields": {
+  "inn": "999999999999999"
+ }
+},
+{
+ "model": "transfers.inn",
+ "pk": 2,
+ "fields": {
+  "inn": "123456789019"
+ }
+},
+{
+ "model": "transfers.inn",
+ "pk": 3,
+ "fields": {
+  "inn": "123456789012345"
+ }
+},
+{
+ "model": "transfers.inn",
+ "pk": 4,
+ "fields": {
+  "inn": "123456789012"
+ }
+},
+{
+ "model": "transfers.profile",
+ "pk": 1,
+ "fields": {
+  "user": 1,
+  "bill": "0.00",
+  "inn": null
+ }
+},
+{
+ "model": "transfers.profile",
+ "pk": 2,
+ "fields": {
+  "user": 2,
+  "bill": "141.70",
+  "inn": null
+ }
+},
+{
+ "model": "transfers.profile",
+ "pk": 3,
+ "fields": {
+  "user": 3,
+  "bill": "1.03",
+  "inn": 2
+ }
+}
+]

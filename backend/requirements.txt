@@ -1,0 +1,7 @@
+pip
+Django
+djangorestframework
+markdown
+django-filter
+django-webpack-loader
+coverage
