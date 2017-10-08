@@ -22,7 +22,7 @@ class TransferService:
             raise TransferException('User has not enough money')
 
     @staticmethod
-    def _load_from_profile_profile(transfer):
+    def _load_from_profile(transfer):
         try:
             return transfer.load_from_profile()
         except Profile.DoesNotExist:
@@ -55,13 +55,17 @@ class TransferService:
             lucky_profile = self._get_lucky_inn_profile(inn_profiles)
             lucky_profile.bill += modulo
 
+    @staticmethod
+    def _get_transfer_model(validated_data):
+        return Transfer(**validated_data)
+
     def make_transfer(self, validated_data):
-        transfer = Transfer(**validated_data)
+        transfer = self._get_transfer_model(validated_data)
         # load models
-        from_profile = self._load_from_profile_profile(transfer)
+        from_profile = self._load_from_profile(transfer)
         self._check_user_balance(from_profile, transfer.amount)
         inn_profiles = self._load_inn_profiles(transfer)
         self._apply_transfer(from_profile, inn_profiles, transfer.amount)
         transfer.save(from_profile, inn_profiles)
-        return from_profile  , inn_profiles
+        return from_profile, inn_profiles
 

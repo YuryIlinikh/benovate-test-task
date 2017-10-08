@@ -1,8 +1,8 @@
 from decimal import Decimal
 from django.test import TestCase
-from mock.mock import MagicMock
+from mock.mock import MagicMock, patch
 
-from transfers.models import Profile
+from transfers.models import Profile, Transfer
 from transfers.transfer import TransferService, TransferException
 
 
@@ -107,3 +107,28 @@ class TransferServiceTestCase(TestCase):
         amount = Decimal(9)
         exp_modulo = False
         self._assert__apply_transfer(exp_from_bill, from_bill, exp_bills, inn_bills, amount, exp_modulo, from_bill_id)
+
+    def test_make_transfer(self):
+        validated_data = {'from_user_id': 1, 'to_inn': '123', 'amount': Decimal(10)}
+        transfer = Transfer(**validated_data)
+        from_profile = Profile(id=1, user_id=1, bill=15)
+        inn_bills = [Decimal(1), Decimal(2), Decimal(3)]
+        inn_profiles = [Profile(bill=bill, id=i + 1) for i, bill in enumerate(inn_bills)]
+
+        service = TransferService()
+        service._get_transfer_model = MagicMock(return_value=transfer)
+        service._load_from_profile = MagicMock(return_value=from_profile)
+        service._check_user_balance = MagicMock(return_value=None)
+        service._load_inn_profiles = MagicMock(return_value=inn_profiles)
+        service._apply_transfer = MagicMock(return_value=None)
+        transfer.save = MagicMock(return_value=None)
+
+        service.make_transfer(validated_data)
+
+        service._get_transfer_model.assert_called_with(validated_data)
+        service._load_from_profile.assert_called_with(transfer)
+        service._check_user_balance.assert_called_with(from_profile, transfer.amount)
+        service._load_inn_profiles.assert_called_with(transfer)
+        service._apply_transfer.assert_called_with(from_profile, inn_profiles, transfer.amount)
+        transfer.save.assert_called_with(from_profile, inn_profiles)
+
