@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import User from '../components/User'
 import Inn from '../components/Inn'
 import Amount from '../components/Amount'
-import 'react-select2-wrapper/css/select2.css'
+
 
 export default class Form extends Component {
     constructor(props) {
